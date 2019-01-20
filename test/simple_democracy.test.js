@@ -8,9 +8,10 @@ contract('SimpleDemocracy', function(accounts) {
   const voter2 = accounts[4];
   const voter3 = accounts[5];
   const voter4 = accounts[6];
-  const voter5 = accounts[7];
-  const voter6 = accounts[8];
-  const voter7 = accounts[9];
+
+  const candidate1 = accounts[7];
+  const candidate2 = accounts[8];
+  const candidate3 = accounts[9];
 
   it('creator can add admins', async () => {
     const democracy = await SimpleDemocracy.deployed();
@@ -72,5 +73,13 @@ contract('SimpleDemocracy', function(accounts) {
       false,
       'voter1 should not be an admin'
     );
+  });
+
+  it('admin can add elections', async () => {
+    const democracy = await SimpleDemocracy.deployed();
+    const candidates = [candidate1, candidate2, candidate3];
+
+    const electionId = await democracy.addElection(candidates);
+    assert.equal(electionId, 1, 'Election ID should be 1');
   });
 });
