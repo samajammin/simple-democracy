@@ -4,7 +4,7 @@ pragma solidity ^0.5.0;
 contract SimpleDemocracy {
     mapping (address => Voter) voters;
     mapping (uint => Election) elections;
-    uint electionCount;
+    uint public electionCount;
 
     event ElectionClosed(uint indexed electionId, address winner);
 

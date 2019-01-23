@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 import {
   AccountData,
   ContractData,
-  ContractForm,
-} from "drizzle-react-components";
+  ContractForm
+} from 'drizzle-react-components';
 
-import logo from "./logo.png";
+import logo from './logo.png';
 
 export default ({ accounts }) => (
   <div className="App">
@@ -34,6 +34,15 @@ export default ({ accounts }) => (
     </div>
 
     <div className="section">
+      <h2>SimpleDemocracy</h2>
+      <p>Some description.</p>
+      <p>
+        <strong>Election count: </strong>
+        <ContractData contract="SimpleDemocracy" method="electionCount" />
+      </p>
+    </div>
+
+    <div className="section">
       <h2>TutorialToken</h2>
       <p>
         Here we have a form with custom, friendly labels. Also note the token
@@ -47,7 +56,7 @@ export default ({ accounts }) => (
           contract="TutorialToken"
           method="totalSupply"
           methodArgs={[{ from: accounts[0] }]}
-        />{" "}
+        />{' '}
         <ContractData contract="TutorialToken" method="symbol" hideIndicator />
       </p>
       <p>
@@ -62,7 +71,7 @@ export default ({ accounts }) => (
       <ContractForm
         contract="TutorialToken"
         method="transfer"
-        labels={["To Address", "Amount to Send"]}
+        labels={['To Address', 'Amount to Send']}
       />
     </div>
     <div className="section">
