@@ -5,8 +5,6 @@ Simple application to allow participants of a network to stack-rank vote on prop
 
 V1
 
-TODO: move project to truffle react/drizzle app.... simple-democracy
-
 1 address == 1 vote
 assumes off-chain verification that each person has only one verified address
 
@@ -35,6 +33,7 @@ who are the entities in this application?
   - maintains whitelist of participants
 
 design considerations....
+- state machine for polls? can only vote if open...
 - how to represent voters & admins? Voter struct? mapping of address to booleans (isAdmin)?
 
 only admins can create proposals
