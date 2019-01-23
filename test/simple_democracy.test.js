@@ -4,18 +4,21 @@ const { shouldFail } = require('openzeppelin-test-helpers');
 contract('SimpleDemocracy', function(accounts) {
   const creator = accounts[0];
   const admin1 = accounts[1];
-  const admin2 = accounts[2];
+  const admin2 = accounts[2]; // TODO remove?
   const voter1 = accounts[3];
   const voter2 = accounts[4];
-  const voter3 = accounts[5];
+  const voter3 = accounts[5]; // TODO remove?
 
   const candidate1 = accounts[7];
   const candidate2 = accounts[8];
-  const candidate3 = accounts[9];
+  const candidate3 = accounts[9]; // TODO remove?
 
   const electionId = 1;
+  const pendingStatus = 0;
+  const activeStatus = 1;
+  const closedStatus = 2;
 
-  const invalidElectionId = 11;
+  const invalidId = 11;
   const invalidCandidate = accounts[6];
   const emptyAddress = '0x0000000000000000000000000000000000000000';
 
@@ -46,7 +49,7 @@ contract('SimpleDemocracy', function(accounts) {
       'admin1 should not yet be an admin'
     );
 
-    await democracy.addVoter(admin1, true, { from: creator });
+    await democracy.registerVoter(admin1, true, { from: creator });
 
     assert.equal(
       await democracy.getRegistration(admin1),
@@ -67,7 +70,7 @@ contract('SimpleDemocracy', function(accounts) {
       'voter1 should not yet be registered'
     );
 
-    await democracy.addVoter(voter1, false, { from: admin1 });
+    await democracy.registerVoter(voter1, false, { from: admin1 });
 
     assert.equal(
       await democracy.getRegistration(voter1),
@@ -81,27 +84,93 @@ contract('SimpleDemocracy', function(accounts) {
     );
 
     await shouldFail.reverting.withMessage(
-      democracy.addVoter(voter1, false, { from: admin1 }),
+      democracy.registerVoter(voter1, false, { from: admin1 }),
       'Voter already registered.'
     );
   });
 
   it('voters cannot add voters', async () => {
     await shouldFail.reverting.withMessage(
-      democracy.addVoter(voter1, false, { from: voter1 }),
+      democracy.registerVoter(voter1, false, { from: voter1 }),
       'Must be an admin.'
     );
   });
 
-  it('admin can add elections', async () => {
-    const candidates = [candidate1, candidate2, candidate3];
-
-    await democracy.addElection(candidates, { from: admin1 });
+  it('admin can create elections', async () => {
     assert.equal(
-      await democracy.getElectionIsOpen(electionId),
-      true,
-      'Election 1 should be open'
+      await democracy.getElectionName(electionId),
+      '',
+      'Election 1 should not exist'
     );
+
+    await democracy.createElection('Our first election', { from: admin1 });
+
+    assert.equal(
+      await democracy.getElectionStatus(electionId),
+      pendingStatus,
+      'Election 1 should be pending'
+    );
+    assert.equal(
+      await democracy.getElectionName(electionId),
+      'Our first election',
+      'Election 1 should have a name'
+    );
+  });
+
+  it('voters cannot create elections', async () => {
+    await shouldFail.reverting.withMessage(
+      democracy.createElection('Invalid election', { from: voter1 }),
+      'Must be an admin.'
+    );
+  });
+
+  it('elections must have a name', async () => {
+    await shouldFail.reverting.withMessage(
+      democracy.createElection('', { from: admin1 }),
+      'Election must have a name.'
+    );
+  });
+
+  it('admin can add candidates to pending elections', async () => {
+    assert.equal(await democracy.getElectionStatus(electionId), pendingStatus);
+    assert.equal(
+      await democracy.getCandidateVoteCount(electionId, candidate1),
+      0
+    );
+
+    await democracy.addElectionCandidate(electionId, candidate1);
+
+    assert.equal(
+      await democracy.getCandidateVoteCount(electionId, candidate1),
+      1
+    );
+
+    await shouldFail.reverting.withMessage(
+      democracy.addElectionCandidate(electionId, candidate1),
+      'Candidate has already been added.'
+    );
+  });
+
+  it('voters cannot vote in pending elections', async () => {
+    assert.equal(await democracy.getElectionStatus(electionId), pendingStatus);
+    await shouldFail.reverting.withMessage(
+      democracy.vote(electionId, candidate2, { from: voter1 }),
+      'Election is not active.'
+    );
+  });
+
+  it('admin can open elections', async () => {
+    assert.equal(await democracy.getElectionStatus(electionId), pendingStatus);
+
+    await shouldFail.reverting.withMessage(
+      democracy.openElection(electionId, { from: admin1 }),
+      'Elections must have at least 2 candidates.'
+    );
+
+    await democracy.addElectionCandidate(electionId, candidate2);
+    await democracy.openElection(electionId, { from: admin1 });
+
+    assert.equal(await democracy.getElectionStatus(electionId), activeStatus);
   });
 
   it('voters can vote once in elections', async () => {
@@ -138,7 +207,7 @@ contract('SimpleDemocracy', function(accounts) {
   });
 
   it('only admin can close election & winner is established', async () => {
-    assert.equal(await democracy.getElectionIsOpen(electionId), true);
+    assert.equal(await democracy.getElectionStatus(electionId), activeStatus);
     assert.equal(await democracy.getElectionWinner(electionId), emptyAddress);
 
     await shouldFail.reverting.withMessage(
@@ -148,22 +217,22 @@ contract('SimpleDemocracy', function(accounts) {
 
     await democracy.closeElection(electionId, { from: admin1 });
 
-    assert.equal(await democracy.getElectionIsOpen(electionId), false);
+    assert.equal(await democracy.getElectionStatus(electionId), closedStatus);
     assert.equal(await democracy.getElectionWinner(electionId), candidate2);
   });
 
-  it('voters cannot vote in closed elections', async () => {
-    assert.equal(await democracy.getElectionIsOpen(electionId), false);
-    assert.equal(await democracy.getElectionIsOpen(invalidElectionId), false);
+  it('voters cannot vote in inactive elections', async () => {
+    assert.equal(await democracy.getElectionStatus(electionId), closedStatus);
+    assert.equal(await democracy.getElectionStatus(invalidId), pendingStatus);
 
     await shouldFail.reverting.withMessage(
       democracy.vote(electionId, candidate1, { from: voter1 }),
-      'Election is closed.'
+      'Election is not active.'
     );
 
     await shouldFail.reverting.withMessage(
-      democracy.vote(invalidElectionId, candidate1, { from: voter1 }),
-      'Election is closed.'
+      democracy.vote(invalidId, candidate1, { from: voter1 }),
+      'Election is not active.'
     );
   });
 });

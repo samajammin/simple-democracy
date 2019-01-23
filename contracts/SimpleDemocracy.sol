@@ -6,15 +6,22 @@ contract SimpleDemocracy {
     mapping (uint => Election) elections;
     uint public electionCount;
 
-    event ElectionClosed(uint indexed electionId, address winner);
+    event ElectionCreated(uint indexed id, string indexed name);
+    event ElectionCandidateAdded(uint indexed id, string indexed name, address candidate);
+    event ElectionOpened(uint indexed id, string indexed name, address[] candidates);
+    event ElectionVoteCast(uint indexed id, string indexed name, address voter, address candidate);
+    event ElectionClosed(uint indexed id, string indexed name, address[] candidates, address winner);
 
     struct Voter {
         bool isAdmin;
         bool hasRegistered;
     }
 
+    enum ElectionStatus { Pending, Active, Closed }
+
     struct Election {
-        bool isOpen;
+        string name; // TODO enfore unique?
+        ElectionStatus status;
         address[] candidates;
         mapping (address => uint) voteCounts;
         mapping (address => bool) hasVoted;
@@ -35,29 +42,42 @@ contract SimpleDemocracy {
         _;
     }
 
-    function addVoter(address _address, bool _isAdmin) public isAdmin() {
-        require(getRegistration(_address) == false, "Voter already registered.");
-        voters[_address] = Voter({ hasRegistered: true, isAdmin: _isAdmin});
+    function registerVoter(address voter, bool _isAdmin) public isAdmin() {
+        require(getRegistration(voter) == false, "Voter already registered.");
+        voters[voter] = Voter({ hasRegistered: true, isAdmin: _isAdmin});
     }
 
-    function addElection(address[] memory candidates) public isAdmin() returns (uint) {
-        require(candidates.length >= 2, "Elections have a minimum of 2 candidates.");
-        require(candidates.length <= 10, "Elections have a maximum of 10 candidates."); 
+    function createElection(string memory electionName) public isAdmin() returns (uint) {
+        require(bytes(electionName).length > 0, "Election must have a name");
         electionCount++;
         Election storage e = elections[electionCount];
-        for (uint i = 0; i < candidates.length; i++) {
-            e.voteCounts[candidates[i]] = 1;
-            e.candidates.push(candidates[i]);
-        }
-        e.isOpen = true;
+        e.name = electionName;
+        e.status = ElectionStatus.Pending;
+        emit ElectionCreated(electionCount, electionName);
         return electionCount;
     }
 
+    function addElectionCandidate(uint electionId, address candidate) public isAdmin() {
+        require(elections[electionId].voteCounts[candidate] == 0, "Candidate has already been added.");
+        elections[electionId].voteCounts[candidate] = 1;
+        elections[electionId].candidates.push(candidate);
+        emit ElectionCandidateAdded(electionId, elections[electionId].name, candidate);
+    }
+
+    function openElection(uint electionId) public isAdmin() {
+        require(elections[electionId].status == ElectionStatus.Pending, "Election is active or closed.");
+        require(elections[electionId].candidates.length > 1, "Elections must have at least 2 candidates.");
+        require(elections[electionId].candidates.length < 10, "Elections must have less than 10 candidates."); 
+        Election storage e = elections[electionId];
+        e.status = ElectionStatus.Active;
+        emit ElectionOpened(electionId, e.name, e.candidates);
+    }
+
     function closeElection(uint electionId) public isAdmin() {
-        require(elections[electionId].isOpen == true, "Election is already closed.");
-        Election storage e = elections[electionId]; // does this variable assignent work? does it add cost? 
-        e.isOpen = false;
-        e.winner = e.candidates[0];
+        require(elections[electionId].status == ElectionStatus.Active, "Election is not active.");
+        Election storage e = elections[electionId]; // TODO assignment add cost? not necessary... purely for legibility
+        e.status = ElectionStatus.Closed;
+        e.winner = e.candidates[0]; // TODO better way to deal w/ ties
         for (uint i = 1; i < e.candidates.length; i++) {
             address candidate = e.candidates[i];
             address leader = e.winner;
@@ -65,15 +85,17 @@ contract SimpleDemocracy {
                 e.winner = candidate;
             }
         }
+        emit ElectionClosed(electionId, e.name, e.candidates, e.winner);
     }
 
     function vote(uint electionId, address candidate) public isVoter() {
-        Election storage e = elections[electionId]; // does this variable assignent work? does it add cost? 
-        require(e.isOpen == true, "Election is closed.");
+        Election storage e = elections[electionId]; // TODO constly to assign storage before checks?
+        require(e.status == ElectionStatus.Active, "Election is not active.");
         require(e.voteCounts[candidate] > 0, "Candidate is not in this election.");
         require(e.hasVoted[msg.sender] == false, "Already voted on this election.");
         e.hasVoted[msg.sender] = true;
         e.voteCounts[candidate] += 1;
+        emit ElectionVoteCast(electionId, e.name, msg.sender, candidate);
     }
 
     // VIEWS
@@ -85,8 +107,12 @@ contract SimpleDemocracy {
         return voters[_address].isAdmin;
     }
 
-    function getElectionIsOpen(uint electionId) public view returns (bool) {
-        return elections[electionId].isOpen;
+    function getElectionName(uint electionId) public view returns (string memory) {
+        return elections[electionId].name;
+    }
+
+    function getElectionStatus(uint electionId) public view returns (ElectionStatus) {
+        return elections[electionId].status;
     }
 
     function getElectionWinner(uint electionId) public view returns (address) {

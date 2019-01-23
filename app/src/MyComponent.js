@@ -18,6 +18,15 @@ export default ({ accounts }) => (
     <div className="section">
       <h2>Active Account</h2>
       <AccountData accountIndex="0" units="ether" precision="3" />
+      <p>
+        <div>TODO - only loads on hard refresh....</div>
+        <strong>getIsAdmin: </strong>
+        <ContractData
+          contract="SimpleDemocracy"
+          method="getIsAdmin"
+          methodArgs={[accounts[0]]}
+        />
+      </p>
     </div>
 
     <div className="section">

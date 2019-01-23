@@ -29,7 +29,6 @@ contract TestSimpleDemocracy {
     SimpleDemocracy democracy = SimpleDemocracy(DeployedAddresses.SimpleDemocracy());
     
     address owner = address(this);
-    address expectedAdopter = address(this);
 
     function testDeployerIsAdmin() public {
         bool isRegistered = democracy.getRegistration(owner);
