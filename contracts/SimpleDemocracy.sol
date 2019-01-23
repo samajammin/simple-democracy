@@ -3,8 +3,10 @@ pragma solidity ^0.5.0;
 
 contract SimpleDemocracy {
     mapping (address => Voter) voters;
-    Election[] elections; // better way to index elections?
+    mapping (uint => Election) elections;
     uint electionCount;
+
+    event ElectionClosed(uint indexed electionId, address winner);
 
     struct Voter {
         bool isAdmin;
@@ -41,18 +43,19 @@ contract SimpleDemocracy {
     function addElection(address[] memory candidates) public isAdmin() returns (uint) {
         require(candidates.length >= 2, "Elections have a minimum of 2 candidates.");
         require(candidates.length <= 10, "Elections have a maximum of 10 candidates."); 
-        Election storage e = elections[electionCount]; // TODO "invalid opcode"
         electionCount++;
+        Election storage e = elections[electionCount];
         for (uint i = 0; i < candidates.length; i++) {
             e.voteCounts[candidates[i]] = 1;
             e.candidates.push(candidates[i]);
         }
         e.isOpen = true;
+        return electionCount;
     }
 
-    function closeElection(uint electionIdx) public isAdmin() {
-        require(elections[electionIdx].isOpen == true, "Election is already closed.");
-        Election storage e = elections[electionIdx]; // does this variable assignent work? does it add cost? 
+    function closeElection(uint electionId) public isAdmin() {
+        require(elections[electionId].isOpen == true, "Election is already closed.");
+        Election storage e = elections[electionId]; // does this variable assignent work? does it add cost? 
         e.isOpen = false;
         e.winner = e.candidates[0];
         for (uint i = 1; i < e.candidates.length; i++) {
@@ -64,8 +67,8 @@ contract SimpleDemocracy {
         }
     }
 
-    function vote(uint electionIdx, address candidate) public isVoter() {
-        Election storage e = elections[electionIdx]; // does this variable assignent work? does it add cost? 
+    function vote(uint electionId, address candidate) public isVoter() {
+        Election storage e = elections[electionId]; // does this variable assignent work? does it add cost? 
         require(e.isOpen == true, "Election is closed.");
         require(e.voteCounts[candidate] > 0, "Candidate is not in this election.");
         require(e.hasVoted[msg.sender] == false, "Already voted on this election.");
@@ -80,5 +83,17 @@ contract SimpleDemocracy {
 
     function getIsAdmin(address _address) public view returns (bool) {
         return voters[_address].isAdmin;
+    }
+
+    function getElectionIsOpen(uint electionId) public view returns (bool) {
+        return elections[electionId].isOpen;
+    }
+
+    function getElectionWinner(uint electionId) public view returns (address) {
+        return elections[electionId].winner;
+    }
+
+    function getCandidateVoteCount(uint electionId, address candidate) public view returns (uint) {
+        return elections[electionId].voteCounts[candidate];
     }
 }

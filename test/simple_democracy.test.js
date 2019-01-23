@@ -75,11 +75,60 @@ contract('SimpleDemocracy', function(accounts) {
     );
   });
 
+  xit('admin cannot add the same voter more than once', async () => {
+    // TODO raise exception
+  });
+
   it('admin can add elections', async () => {
     const democracy = await SimpleDemocracy.deployed();
     const candidates = [candidate1, candidate2, candidate3];
 
-    const electionId = await democracy.addElection(candidates);
-    assert.equal(electionId, 1, 'Election ID should be 1');
+    const electionId = 1;
+    await democracy.addElection(candidates);
+    assert.equal(
+      await democracy.getElectionIsOpen(electionId),
+      true,
+      'Election 1 should be open'
+    );
   });
+
+  it('voters can vote once in elections', async () => {
+    const democracy = await SimpleDemocracy.deployed();
+    const candidates = [candidate1, candidate2, candidate3];
+
+    const electionId = 1;
+    await democracy.addElection(candidates);
+
+    // vote first time success
+    assert.equal(
+      await democracy.getCandidateVoteCount(electionId, candidate2),
+      1
+    );
+    await democracy.vote(electionId, candidate2, { from: voter1 });
+    assert.equal(
+      await democracy.getCandidateVoteCount(electionId, candidate2),
+      2
+    );
+
+    // vote second time raise exception
+    // await democracy.vote(electionId, candidate2, { from: voter1 });
+    // assert.equal(
+    //   await democracy.getCandidateVoteCount(electionId, candidate2),
+    //   2
+    // );
+  });
+
+  xit('voters cannot vote in closed elections', async () => {
+    // TODO raise exception
+  });
+
+  xit('voters cannot vote for candidates not in the election', async () => {
+    // TODO raise exception
+  });
+
+  xit('voters cannot vote for candidates not in the election', async () => {
+    // TODO raise exception
+  });
+
+  xit('admin can close election & winner is established', async () => {});
 });

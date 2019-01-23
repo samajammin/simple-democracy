@@ -26,19 +26,15 @@ contract TestSimpleDemocracy {
     // address address5 = address(0xe71db9d7971a5721d43d6db520179605b16bbd6c);
     // address address6 = address(0x9c5b9023a98a17f4f0c6b2076183cc178af11679);
 
+    SimpleDemocracy democracy = SimpleDemocracy(DeployedAddresses.SimpleDemocracy());
+    
+    address owner = address(this);
+    address expectedAdopter = address(this);
+
     function testDeployerIsAdmin() public {
-        SimpleDemocracy democracy = SimpleDemocracy(DeployedAddresses.SimpleDemocracy());
-
-        Assert.equal(democracy.getVoter(tx.origin), true, "Creator should be an admin");
-        Assert.equal(tx.origin, accounts[0], " should be an admin");
+        bool isRegistered = democracy.getRegistration(owner);
+        bool isAdmin = democracy.getIsAdmin(owner);
+        Assert.equal(isRegistered, true, "Owner should be registered");
+        Assert.equal(isAdmin, true, "Owner should be an admin");
     }
-
-//   function testInitialBalanceWithNewSimpleDemocracy() public {
-//     SimpleDemocracy meta = new SimpleDemocracy();
-
-//     uint expected = 10000;
-
-//     Assert.equal(meta.getBalance(tx.origin), expected, "Owner should have 10000 SimpleDemocracy initially");
-//   }
-
 }
