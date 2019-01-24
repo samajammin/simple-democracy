@@ -1,6 +1,3 @@
-import SimpleStorage from './contracts/SimpleStorage.json';
-import ComplexStorage from './contracts/ComplexStorage.json';
-import TutorialToken from './contracts/TutorialToken.json';
 import SimpleDemocracy from './contracts/SimpleDemocracy.json';
 
 const options = {
@@ -11,11 +8,16 @@ const options = {
       url: 'ws://127.0.0.1:9545'
     }
   },
-  contracts: [SimpleStorage, ComplexStorage, TutorialToken, SimpleDemocracy],
+  contracts: [SimpleDemocracy],
   events: {
-    // TODO add SimpleDemocracy events
     // https://github.com/trufflesuite/drizzle#events-object
-    SimpleStorage: ['StorageSet']
+    SimpleDemocracy: [
+      'ElectionCreated',
+      'ElectionCandidateAdded',
+      'ElectionOpened',
+      'ElectionVoteCast',
+      'ElectionClosed'
+    ]
   },
   polls: {
     accounts: 1500

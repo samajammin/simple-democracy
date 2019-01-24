@@ -1,14 +1,15 @@
-import React, { Component } from "react";
-import { DrizzleProvider } from "drizzle-react";
-import { LoadingContainer } from "drizzle-react-components";
+import React, { Component } from 'react';
+import { DrizzleProvider } from 'drizzle-react';
+import { LoadingContainer } from 'drizzle-react-components';
 
-import "./App.css";
+import './App.css';
 
-import drizzleOptions from "./drizzleOptions";
-import MyContainer from "./MyContainer";
+import drizzleOptions from './drizzleOptions';
+import MyContainer from './MyContainer';
 
 class App extends Component {
   render() {
+    // TODO bring <LoadingContainer> into project to customize
     return (
       <DrizzleProvider options={drizzleOptions}>
         <LoadingContainer>
