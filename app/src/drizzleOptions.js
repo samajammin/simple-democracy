@@ -13,6 +13,8 @@ const options = {
   },
   contracts: [SimpleStorage, ComplexStorage, TutorialToken, SimpleDemocracy],
   events: {
+    // TODO add SimpleDemocracy events
+    // https://github.com/trufflesuite/drizzle#events-object
     SimpleStorage: ['StorageSet']
   },
   polls: {

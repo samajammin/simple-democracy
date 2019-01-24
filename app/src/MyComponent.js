@@ -1,9 +1,8 @@
 import React from 'react';
-import {
-  AccountData,
-  ContractData,
-  ContractForm
-} from 'drizzle-react-components';
+import AdminForms from './AdminForms';
+import VoterForms from './VoterForms';
+import ContractData from './ContractData';
+import { AccountData, ContractForm } from 'drizzle-react-components';
 
 import logo from './logo.png';
 
@@ -14,12 +13,21 @@ export default ({ accounts }) => (
       <h1>Drizzle Examples</h1>
       <p>Examples of how to get started with Drizzle in various situations.</p>
     </div>
-
     <div className="section">
-      <h2>Active Account</h2>
+      <h2>SimpleDemocracy</h2>
+      <h3>Active Account</h3>
       <AccountData accountIndex="0" units="ether" precision="3" />
+      <h3>Election count: </h3>
+      <ContractData contract="SimpleDemocracy" method="electionCount" />
+      <div>TODO - only loads on hard refresh....</div>
+      <h3>getElectionCandidates:</h3>
+      <ContractData
+        contract="SimpleDemocracy"
+        method="getElectionCandidates"
+        methodArgs={[1]}
+      />
+      TODO - pass candidate options as a dropdown to vote input
       <p>
-        <div>TODO - only loads on hard refresh....</div>
         <strong>getIsAdmin: </strong>
         <ContractData
           contract="SimpleDemocracy"
@@ -27,8 +35,18 @@ export default ({ accounts }) => (
           methodArgs={[accounts[0]]}
         />
       </p>
+      <p>
+        <strong>getRegistration: </strong>
+        <ContractData
+          contract="SimpleDemocracy"
+          method="getRegistration"
+          methodArgs={[accounts[0]]}
+        />
+      </p>
+      TODO - store isAdmin in account state... conditionally show admin forms
+      <AdminForms />
+      <VoterForms />
     </div>
-
     <div className="section">
       <h2>SimpleStorage</h2>
       <p>
@@ -41,16 +59,6 @@ export default ({ accounts }) => (
       </p>
       <ContractForm contract="SimpleStorage" method="set" />
     </div>
-
-    <div className="section">
-      <h2>SimpleDemocracy</h2>
-      <p>Some description.</p>
-      <p>
-        <strong>Election count: </strong>
-        <ContractData contract="SimpleDemocracy" method="electionCount" />
-      </p>
-    </div>
-
     <div className="section">
       <h2>TutorialToken</h2>
       <p>
