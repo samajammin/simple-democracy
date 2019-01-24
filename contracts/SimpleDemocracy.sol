@@ -110,6 +110,10 @@ contract SimpleDemocracy {
     function getElectionName(uint electionId) public view returns (string memory) {
         return elections[electionId].name;
     }
+    
+    function getElectionCandidates(uint electionId) public view returns (address[] memory) {
+        return elections[electionId].candidates;
+    }
 
     function getElectionStatus(uint electionId) public view returns (ElectionStatus) {
         return elections[electionId].status;
