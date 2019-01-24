@@ -1,8 +1,8 @@
 # Simple Democracy
 
-Truffle & React dApp for conducting basic elections.
+Truffle, Drizzle & React dApp for conducting basic elections.
 
-# Under heavy construction. Pardon the dust.
+# ***Under heavy construction. Pardon the dust.***
 
 ## Prerequisites
 
@@ -35,11 +35,7 @@ yarn global add ganache-cli
 Clone & navigate into the repository:
 
 ```
-git clone <repository-url> this repository
-```
-
-```
-cd simple-democracy
+git clone git@github.com:sbrichards/simple-democracy.git && cd simple-democracy
 ```
 
 ## Running / Development
