@@ -8,3 +8,7 @@
   max-width: 720px;
   margin: 4rem auto auto;
 }
+
+.sd-container {
+  display: flex;
+}

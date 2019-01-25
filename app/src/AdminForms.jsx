@@ -1,17 +1,11 @@
 import React from 'react';
-import {
-  // AccountData,
-  // ContractData,
-  ContractForm
-} from 'drizzle-react-components';
+import { ContractForm } from 'drizzle-react-components';
 
 export default class AdminForms extends React.Component {
-  // constructor() {
-  //   this.props = { contract: 'SimpleDemocracy' };
-  // }
   render() {
     return (
       <div>
+        <h1>Welcome, admin.</h1>
         <h3>registerVoter:</h3>
         <ContractForm
           contract="SimpleDemocracy"
