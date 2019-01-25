@@ -25,7 +25,7 @@ class AppForms extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.account && this.props.account != prevProps.account) {
+    if (this.props.account && this.props.account !== prevProps.account) {
       this.setState({
         isRegistered: this.SimpleDemocracy.methods['getRegistration'].cacheCall(
           this.props.account

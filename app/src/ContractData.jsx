@@ -89,7 +89,7 @@ class ContractData extends Component {
       const displayObjectProps = [];
 
       Object.keys(displayData).forEach(key => {
-        if (i != key) {
+        if (i !== key) {
           displayObjectProps.push(
             <li key={i}>
               <strong>{key}</strong>

@@ -12,15 +12,27 @@ class DemocracyApp extends React.Component {
   constructor(props, context) {
     super(props);
 
+    this.state = {};
+
     const events = drizzleOptions.events.SimpleDemocracy;
     events.forEach(eventName => {
+      this.state[eventName] = {};
       context.drizzle.contracts.SimpleDemocracy.events[eventName]().on(
         'data',
         event => {
+          const electionId = event.returnValues.id;
           const message = `${event.event}! Election name: ${
             event.returnValues.name
-          } Election ID: ${event.returnValues.id}`;
-          console.log(message);
+          } Election ID: ${electionId}`;
+
+          // Catch duplicate events for same transaction
+          if (this.state[eventName] === electionId) {
+            return;
+          } else {
+            this.setState({ [eventName]: electionId });
+            console.log(message);
+            window.alert(message);
+          }
         }
       );
       // TODO how to catch transaction error? event only fires when succesful...
