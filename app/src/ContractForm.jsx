@@ -126,8 +126,7 @@ ContractForm.contextTypes = {
 
 const mapStateToProps = state => {
   return {
-    contracts: state.contracts,
-    web3: state.web3
+    contracts: state.contracts
   };
 };
 

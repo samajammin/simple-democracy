@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ContractForm from './ContractForm';
 
-export default class AdminForms extends React.Component {
+export default class AdminForms extends Component {
   render() {
     return (
       <div>
         <h3>Register a voter:</h3>
+        {/* 
+          TODO try something like passing accounts here?
+          https://ethereum.stackexchange.com/questions/43707/truffle-drizzle-contractdata-call-keccak256-error
+
+          Or raise issue here?
+          https://github.com/trufflesuite/drizzle/issues/76
+        */}
         <ContractForm
           contract="SimpleDemocracy"
           method="registerVoter"
