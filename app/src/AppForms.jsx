@@ -58,7 +58,7 @@ class AppForms extends Component {
     }
 
     // // Show a loading spinner for future updates.
-    // var pendingSpinner = this.props.contracts['SimpleDemocracy'].synced
+    // let pendingSpinner = this.props.contracts['SimpleDemocracy'].synced
     //   ? ''
     //   : ' 🔄';
 

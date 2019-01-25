@@ -1,4 +1,4 @@
-var SimpleDemocracy = artifacts.require('./SimpleDemocracy.sol');
+let SimpleDemocracy = artifacts.require('./SimpleDemocracy.sol');
 const { shouldFail } = require('openzeppelin-test-helpers');
 
 contract('SimpleDemocracy', function(accounts) {

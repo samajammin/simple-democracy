@@ -11,7 +11,7 @@ class AccountProfile extends Component {
   }
 
   precisionRound(number, precision) {
-    var factor = Math.pow(10, precision);
+    let factor = Math.pow(10, precision);
     return Math.round(number * factor) / factor;
   }
 
@@ -23,7 +23,7 @@ class AccountProfile extends Component {
 
     // Get account address and balance.
     const address = this.props.accounts[this.props.accountIndex];
-    var balance = this.props.accountBalances[address];
+    let balance = this.props.accountBalances[address];
     const units = this.props.units
       ? this.props.units.charAt(0).toUpperCase() + this.props.units.slice(1)
       : 'Wei';

@@ -13,7 +13,7 @@ class ContractData extends Component {
 
     this.method =
       context.drizzle.contracts[this.props.contract].methods[this.props.method];
-    var methodArgs = this.props.methodArgs ? this.props.methodArgs : [];
+    let methodArgs = this.props.methodArgs ? this.props.methodArgs : [];
     this.state = { dataKey: this.method.cacheCall(...methodArgs) };
   }
 
@@ -46,7 +46,7 @@ class ContractData extends Component {
     }
 
     // Show a loading spinner for future updates.
-    var pendingSpinner = this.props.contracts[this.props.contract].synced
+    let pendingSpinner = this.props.contracts[this.props.contract].synced
       ? ''
       : ' 🔄';
 
@@ -55,7 +55,7 @@ class ContractData extends Component {
       pendingSpinner = '';
     }
 
-    var displayData = this.props.contracts[this.props.contract][
+    let displayData = this.props.contracts[this.props.contract][
       this.props.method
     ][this.state.dataKey].value;
 
@@ -85,7 +85,7 @@ class ContractData extends Component {
 
     // If retun value is an object
     if (typeof displayData === 'object' && displayData !== null) {
-      var i = 0;
+      let i = 0;
       const displayObjectProps = [];
 
       Object.keys(displayData).forEach(key => {
