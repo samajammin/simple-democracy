@@ -89,6 +89,29 @@ contract('SimpleDemocracy', function(accounts) {
     );
   });
 
+  it('admins can freeze and unfreeze the contract', async () => {
+    await democracy.toggleFreeze({ from: admin1 });
+
+    await shouldFail.reverting.withMessage(
+      democracy.registerVoter(voter3, false, { from: admin1 }),
+      'This contract is frozen.'
+    );
+    assert.equal(
+      await democracy.getRegistration(voter3),
+      false,
+      'voter3 should not be registered'
+    );
+
+    await democracy.toggleFreeze({ from: admin1 });
+
+    await democracy.registerVoter(voter3, false, { from: admin1 });
+    assert.equal(
+      await democracy.getRegistration(voter3),
+      true,
+      'voter3 should be registered'
+    );
+  });
+
   it('voters cannot add voters', async () => {
     await shouldFail.reverting.withMessage(
       democracy.registerVoter(voter1, false, { from: voter1 }),

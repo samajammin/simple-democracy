@@ -5,6 +5,7 @@ contract SimpleDemocracy {
     mapping (address => Voter) voters;
     mapping (uint => Election) elections;
     uint public electionCount;
+    bool private frozen = false;
 
     event ElectionCreated(uint indexed id, string name);
     event ElectionCandidateAdded(uint indexed id, string name, address candidate);
@@ -37,12 +38,21 @@ contract SimpleDemocracy {
         _;
     }
 
+    modifier revertIfFrozen() {
+        require(!frozen, "This contract is frozen.");
+        _;
+    }
+
     modifier isVoter() {
         require(voters[msg.sender].hasRegistered == true, "Must be a registered voter.");
         _;
     }
 
-    function registerVoter(address voter, bool _isAdmin) public isAdmin() {
+    function toggleFreeze() public isAdmin() {
+        frozen = !frozen;
+    }
+
+    function registerVoter(address voter, bool _isAdmin) public isAdmin() revertIfFrozen() {
         require(getRegistration(voter) == false, "Voter already registered.");
         voters[voter] = Voter({ hasRegistered: true, isAdmin: _isAdmin});
     }
@@ -64,7 +74,7 @@ contract SimpleDemocracy {
         emit ElectionCandidateAdded(electionId, elections[electionId].name, candidate);
     }
 
-    function openElection(uint electionId) public isAdmin() {
+    function openElection(uint electionId) public isAdmin() revertIfFrozen() {
         require(elections[electionId].status == ElectionStatus.Pending, "Election is active or closed.");
         require(elections[electionId].candidates.length > 1, "Elections must have at least 2 candidates.");
         require(elections[electionId].candidates.length < 10, "Elections must have less than 10 candidates."); 
@@ -73,7 +83,7 @@ contract SimpleDemocracy {
         emit ElectionOpened(electionId, e.name, e.candidates);
     }
 
-    function closeElection(uint electionId) public isAdmin() {
+    function closeElection(uint electionId) public isAdmin() revertIfFrozen() {
         require(elections[electionId].status == ElectionStatus.Active, "Election is not active.");
         Election storage e = elections[electionId]; // TODO assignment add cost? not necessary... purely for legibility
         e.status = ElectionStatus.Closed;
@@ -88,8 +98,8 @@ contract SimpleDemocracy {
         emit ElectionClosed(electionId, e.name, e.candidates, e.winner);
     }
 
-    function vote(uint electionId, address candidate) public isVoter() {
-        Election storage e = elections[electionId]; // TODO constly to assign storage before checks?
+    function vote(uint electionId, address candidate) public isVoter() revertIfFrozen() {
+        Election storage e = elections[electionId]; // TODO costly to assign storage before checks?
         require(e.status == ElectionStatus.Active, "Election is not active.");
         require(e.voteCounts[candidate] > 0, "Candidate is not in this election.");
         require(e.hasVoted[msg.sender] == false, "Already voted on this election.");
