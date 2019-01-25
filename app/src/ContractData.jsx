@@ -84,7 +84,7 @@ class ContractData extends Component {
     }
 
     // If retun value is an object
-    if (typeof displayData === 'object') {
+    if (typeof displayData === 'object' && displayData !== null) {
       var i = 0;
       const displayObjectProps = [];
 

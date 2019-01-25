@@ -1,11 +1,11 @@
 import React from 'react';
-import { ContractForm } from 'drizzle-react-components';
+import ContractForm from './ContractForm';
 
 export default class AdminForms extends React.Component {
   render() {
     return (
       <div>
-        <h3>Registe a voter:</h3>
+        <h3>Register a voter:</h3>
         <ContractForm
           contract="SimpleDemocracy"
           method="registerVoter"

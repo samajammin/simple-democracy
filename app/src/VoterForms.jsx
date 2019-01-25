@@ -1,5 +1,5 @@
 import React from 'react';
-import { ContractForm } from 'drizzle-react-components';
+import ContractForm from './ContractForm';
 
 export default class VoterForms extends React.Component {
   render() {
