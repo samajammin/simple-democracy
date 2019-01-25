@@ -6,11 +6,11 @@ contract SimpleDemocracy {
     mapping (uint => Election) elections;
     uint public electionCount;
 
-    event ElectionCreated(uint indexed id, string indexed name);
-    event ElectionCandidateAdded(uint indexed id, string indexed name, address candidate);
-    event ElectionOpened(uint indexed id, string indexed name, address[] candidates);
-    event ElectionVoteCast(uint indexed id, string indexed name, address voter, address candidate);
-    event ElectionClosed(uint indexed id, string indexed name, address[] candidates, address winner);
+    event ElectionCreated(uint indexed id, string name);
+    event ElectionCandidateAdded(uint indexed id, string name, address candidate);
+    event ElectionOpened(uint indexed id, string name, address[] candidates);
+    event ElectionVoteCast(uint indexed id, string name, address voter, address candidate);
+    event ElectionClosed(uint indexed id, string name, address[] candidates, address winner);
 
     struct Voter {
         bool isAdmin;

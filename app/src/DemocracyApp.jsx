@@ -9,6 +9,26 @@ import drizzleOptions from './drizzleOptions';
 import vote from './vote.jpg';
 
 class DemocracyApp extends React.Component {
+  constructor(props, context) {
+    super(props);
+
+    const events = drizzleOptions.events.SimpleDemocracy;
+    events.forEach(eventName => {
+      context.drizzle.contracts.SimpleDemocracy.events[eventName]().on(
+        'data',
+        event => {
+          const message = `${event.event}! Election name: ${
+            event.returnValues.name
+          } Election ID: ${event.returnValues.id}`;
+          console.log(message);
+        }
+      );
+      // TODO how to catch transaction error? event only fires when succesful...
+      // .on('changed', event => console.log('changed: ', event))
+      // .on('error', error => console.log('error: ', error));
+    });
+  }
+
   render() {
     return (
       <div className="App">
