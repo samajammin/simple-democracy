@@ -5,24 +5,23 @@ export default class AdminForms extends React.Component {
   render() {
     return (
       <div>
-        <h1>Welcome, admin.</h1>
-        <h3>registerVoter:</h3>
+        <h3>Registe a voter:</h3>
         <ContractForm
           contract="SimpleDemocracy"
           method="registerVoter"
           labels={['Address', 'isAdmin']}
         />
-        <h3>createElection:</h3>
+        <h3>Create an election:</h3>
         <ContractForm contract="SimpleDemocracy" method="createElection" />
         TODO: label for isAdmin boolean
-        <h3>addElectionCandidate</h3>
+        <h3>Add a candidate to an election:</h3>
         <ContractForm
           contract="SimpleDemocracy"
           method="addElectionCandidate"
         />
-        <h3>openElection</h3>
+        <h3>Open an election for voting:</h3>
         <ContractForm contract="SimpleDemocracy" method="openElection" />
-        <h3>closeElection</h3>
+        <h3>Close an election:</h3>
         <ContractForm contract="SimpleDemocracy" method="closeElection" />
       </div>
     );

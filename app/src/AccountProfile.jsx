@@ -1,10 +1,7 @@
 import { drizzleConnect } from 'drizzle-react';
+import ContractData from './ContractData';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-/*
- * Create component.
- */
 
 class AccountProfile extends Component {
   constructor(props, context) {
@@ -52,6 +49,22 @@ class AccountProfile extends Component {
         <h4>
           <strong>Balance:</strong> {balance} {units}
         </h4>
+        <p>
+          <strong>Admin permissions: </strong>
+          <ContractData
+            contract="SimpleDemocracy"
+            method="getIsAdmin"
+            methodArgs={[this.props.accounts[this.props.accountIndex]]}
+          />
+        </p>
+        <p>
+          <strong>Registered voter: </strong>
+          <ContractData
+            contract="SimpleDemocracy"
+            method="getRegistration"
+            methodArgs={[this.props.accounts[this.props.accountIndex]]}
+          />
+        </p>
       </div>
     );
   }

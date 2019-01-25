@@ -3,28 +3,30 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 /*
-  Copied from
+  Adapted from
   https://github.com/trufflesuite/drizzle-react-components/blob/master/src/ContractData.js
-  Except for bug fix on line 68 block
-  Tried forking & adding:
-  "drizzle-react-components": "https://github.com/sbrichards/drizzle-react-components#384ef723b84027ed6acf622650cd8f258f3b0ea5"
-  to package.json, but didn't work :(
  */
 
 class ContractData extends Component {
   constructor(props, context) {
     super(props);
 
-    this.contracts = context.drizzle.contracts;
-
-    // Get the contract ABI
-    const abi = this.contracts[this.props.contract].abi;
-
-    // Fetch initial value from chain and return cache key for reactive updates.
+    this.method =
+      context.drizzle.contracts[this.props.contract].methods[this.props.method];
     var methodArgs = this.props.methodArgs ? this.props.methodArgs : [];
-    this.dataKey = this.contracts[this.props.contract].methods[
-      this.props.method
-    ].cacheCall(...methodArgs);
+    this.state = { dataKey: this.method.cacheCall(...methodArgs) };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.methodArgs &&
+      JSON.stringify(this.props.methodArgs) !==
+        JSON.stringify(prevProps.methodArgs)
+    ) {
+      this.setState({
+        dataKey: this.method.cacheCall(...this.props.methodArgs)
+      });
+    }
   }
 
   render() {
@@ -36,7 +38,7 @@ class ContractData extends Component {
     // If the cache key we received earlier isn't in the store yet; the initial value is still being fetched.
     if (
       !(
-        this.dataKey in
+        this.state.dataKey in
         this.props.contracts[this.props.contract][this.props.method]
       )
     ) {
@@ -55,7 +57,7 @@ class ContractData extends Component {
 
     var displayData = this.props.contracts[this.props.contract][
       this.props.method
-    ][this.dataKey].value;
+    ][this.state.dataKey].value;
 
     // Optionally convert to UTF8
     if (this.props.toUtf8) {

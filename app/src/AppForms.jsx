@@ -8,21 +8,33 @@ import VoterForms from './VoterForms';
   Adapted from
   https://github.com/trufflesuite/drizzle-react-components/blob/master/src/AppForms.js
  */
-
 class AppForms extends Component {
   constructor(props, context) {
     super(props);
 
-    this.contracts = context.drizzle.contracts;
+    this.SimpleDemocracy = context.drizzle.contracts['SimpleDemocracy'];
 
-    // Fetch if account is registered
-    this.isRegistered = this.contracts['SimpleDemocracy'].methods[
-      'getRegistration'
-    ].cacheCall(props.account);
-    // Fetch if account is an admin
-    this.isAdmin = this.contracts['SimpleDemocracy'].methods[
-      'getIsAdmin'
-    ].cacheCall(props.account);
+    this.state = {
+      isRegistered: this.SimpleDemocracy.methods['getRegistration'].cacheCall(
+        props.account
+      ),
+      isAdmin: this.SimpleDemocracy.methods['getIsAdmin'].cacheCall(
+        props.account
+      )
+    };
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.account && this.props.account != prevProps.account) {
+      this.setState({
+        isRegistered: this.SimpleDemocracy.methods['getRegistration'].cacheCall(
+          this.props.account
+        ),
+        isAdmin: this.SimpleDemocracy.methods['getIsAdmin'].cacheCall(
+          this.props.account
+        )
+      });
+    }
   }
 
   render() {
@@ -34,10 +46,11 @@ class AppForms extends Component {
     // If the cache key we received earlier isn't in the store yet; the initial value is still being fetched.
     if (
       !(
-        this.isAdmin in this.props.contracts['SimpleDemocracy']['getIsAdmin']
+        this.state.isAdmin in
+        this.props.contracts['SimpleDemocracy']['getIsAdmin']
       ) ||
       !(
-        this.isRegistered in
+        this.state.isRegistered in
         this.props.contracts['SimpleDemocracy']['getRegistration']
       )
     ) {
@@ -55,12 +68,12 @@ class AppForms extends Component {
     // }
 
     const isAdmin = this.props.contracts['SimpleDemocracy']['getIsAdmin'][
-      this.isAdmin
+      this.state.isAdmin
     ].value;
 
     const isRegistered = this.props.contracts['SimpleDemocracy'][
       'getRegistration'
-    ][this.isAdmin].value;
+    ][this.state.isRegistered].value;
 
     if (isAdmin) {
       return (

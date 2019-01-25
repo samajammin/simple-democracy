@@ -1,4 +1,4 @@
-import MyComponent from './MyComponent';
+import Home from './Home';
 import { drizzleConnect } from 'drizzle-react';
 
 const mapStateToProps = state => {
@@ -9,6 +9,6 @@ const mapStateToProps = state => {
   };
 };
 
-const MyContainer = drizzleConnect(MyComponent, mapStateToProps);
+const DrizzleContainer = drizzleConnect(Home, mapStateToProps);
 
-export default MyContainer;
+export default DrizzleContainer;

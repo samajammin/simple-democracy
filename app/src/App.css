@@ -6,9 +6,13 @@
 .section {
   text-align: left;
   max-width: 720px;
-  margin: 4rem auto auto;
+  margin: 2rem auto auto;
 }
 
 .sd-container {
   display: flex;
+}
+
+.sd-logo {
+  width: 120px;
 }
