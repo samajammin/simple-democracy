@@ -2,7 +2,7 @@ let SimpleDemocracy = artifacts.require('./SimpleDemocracy.sol');
 const { shouldFail } = require('openzeppelin-test-helpers');
 
 contract('SimpleDemocracy', function(accounts) {
-  const creator = accounts[0];
+  const owner = accounts[0];
   const admin1 = accounts[1];
   const admin2 = accounts[2]; // TODO remove?
   const voter1 = accounts[3];
@@ -26,16 +26,24 @@ contract('SimpleDemocracy', function(accounts) {
     this.democracy = await SimpleDemocracy.deployed();
   });
 
-  it('creator can add admins', async () => {
+  it('deployer is contract owner', async () => {
     assert.equal(
-      await democracy.getRegistration(creator),
+      await democracy.owner({ from: owner }),
+      owner,
+      'deployer should be the contract owner'
+    );
+  });
+
+  it('owner can add admins', async () => {
+    assert.equal(
+      await democracy.getRegistration(owner),
       true,
-      'creator should be registered'
+      'owner should be registered'
     );
     assert.equal(
-      await democracy.getIsAdmin(creator),
+      await democracy.getIsAdmin(owner),
       true,
-      'creator should be an admin'
+      'owner should be an admin'
     );
 
     assert.equal(
@@ -49,7 +57,7 @@ contract('SimpleDemocracy', function(accounts) {
       'admin1 should not yet be an admin'
     );
 
-    await democracy.registerVoter(admin1, true, { from: creator });
+    await democracy.registerVoter(admin1, true, { from: owner });
 
     assert.equal(
       await democracy.getRegistration(admin1),
@@ -89,11 +97,11 @@ contract('SimpleDemocracy', function(accounts) {
     );
   });
 
-  it('admins can freeze and unfreeze the contract', async () => {
-    await democracy.toggleFreeze({ from: admin1 });
+  it('owner can freeze and unfreeze the contract', async () => {
+    await democracy.toggleFreeze({ from: owner });
 
     await shouldFail.reverting.withMessage(
-      democracy.registerVoter(voter3, false, { from: admin1 }),
+      democracy.registerVoter(voter3, false, { from: owner }),
       'This contract is frozen.'
     );
     assert.equal(
@@ -102,9 +110,9 @@ contract('SimpleDemocracy', function(accounts) {
       'voter3 should not be registered'
     );
 
-    await democracy.toggleFreeze({ from: admin1 });
+    await democracy.toggleFreeze({ from: owner });
 
-    await democracy.registerVoter(voter3, false, { from: admin1 });
+    await democracy.registerVoter(voter3, false, { from: owner });
     assert.equal(
       await democracy.getRegistration(voter3),
       true,

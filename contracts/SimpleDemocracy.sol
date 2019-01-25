@@ -1,7 +1,8 @@
 pragma solidity ^0.5.0;
 
+import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
 
-contract SimpleDemocracy {
+contract SimpleDemocracy is Ownable {
     mapping (address => Voter) voters;
     mapping (uint => Election) elections;
     uint public electionCount;
@@ -38,17 +39,17 @@ contract SimpleDemocracy {
         _;
     }
 
-    modifier revertIfFrozen() {
-        require(!frozen, "This contract is frozen.");
-        _;
-    }
-
     modifier isVoter() {
         require(voters[msg.sender].hasRegistered == true, "Must be a registered voter.");
         _;
     }
 
-    function toggleFreeze() public isAdmin() {
+    modifier revertIfFrozen() {
+        require(!frozen, "This contract is frozen.");
+        _;
+    }
+
+    function toggleFreeze() public onlyOwner() {
         frozen = !frozen;
     }
 
