@@ -24,13 +24,7 @@ Install [Truffle](https://truffleframework.com/truffle):
 yarn global add truffle
 ```
 
-Ensure you have truffle version 5:
-
-```
-truffle version
-```
-
-Your output should look something like:
+Ensure you have truffle 5. Running `truffle version` should output look something like:
 
 ```
 Truffle v5.0.1 (core: 5.0.1)
@@ -54,17 +48,21 @@ git clone git@github.com:sbrichards/simple-democracy.git && cd simple-democracy
 
 #### From project root...
 
+Download dependencies:
+
+```
+yarn
+```
+
 Fire up your local development blockchain:
 
 ```
 ganache-cli
 ```
 
-This will spawn a new blockchain that listens on 127.0.0.1:8545 by default.
+In addition to spinning up a test network (listening on 127.0.0.1:8545 by default), Ganache also creates 10 addresses, each with a balance of 100 ETH.
 
-In addition to spinning up a test network, Ganache also creates 10 addresses w/ 100 ETH each. Copy the Mnemonic output. You'll need to paste this seed phrases into MetaMask in order to control these accounts.
-
-Leave this terminal window open.
+Leave this terminal window open and copy the Mnemonic output. You'll need to [paste this seed phrase into MetaMask](https://medium.com/publicaio/how-import-a-wallet-to-your-metamask-account-dcaba25e558d) in order to import and control these accounts.
 
 Compile & deploy the application contracts to the test network:
 
@@ -73,6 +71,12 @@ truffle migrate
 ```
 
 #### From app/ directory...
+
+Download dependencies:
+
+```
+yarn
+```
 
 Fire up the React application:
 
@@ -84,7 +88,7 @@ The application shoud now be accessible at [http://localhost:3000/](http://local
 
 Leave this terminal window open.
 
-Paste the Mnemonic from Ganache into MetaMask. You should now have control of the generated addresses to sign transactions.
+Paste the Mnemonic from Ganache into MetaMask using the ["import with seed phrase" option](https://medium.com/publicaio/how-import-a-wallet-to-your-metamask-account-dcaba25e558d). From the MetaMask network dropdown, select the private network (Localhost 8545). You should now have control of the generated addresses to sign transactions.
 
 ## Using the dApp
 
@@ -94,7 +98,7 @@ This dApp has three user types:
 2. Voters
 3. Unregistered users
 
-A "user" in the dApp is an Ethereum account address. Users can interact with this dApp through MetaMask. See design_decision.md for more info.
+A "user" in the dApp is an Ethereum account address. Users can interact with this dApp through MetaMask.
 
 Only admins can:
 
@@ -131,18 +135,20 @@ truffle test
 
 ## Resources
 
+- [Design decisions of this project](./design_pattern_decisions.md)
+- [Attack vulnerabilities of this project](./avoiding_common_attacks.md)
 - [Truffle Suite](https://www.truffleframework.com/)
 
 ## Troubleshooting
 
-### Known bug
-
-You may hit an error when switching between MetaMask accounts and attempting transactions. Inspect you're browse console and you'll find this warning:
+There's a known bug when switching between MetaMask accounts and attempting transactions. Inspect your browser console and you'll find this warning:
 
 ```
 inpage.js:1 MetaMask - RPC Error: Error: WalletMiddleware - Invalid "from" address.
 ```
 
 There's an [open issue on MetaMask's Github](https://github.com/MetaMask/metamask-extension/issues/5587). Feel free to weigh in :)
+
+In general, if you encounter an issue (e.g. when submitting an input), try refreshing the browser. It should solve the problem.
 
 ### Any other problems? Shoot me an email at sbrichards(at)gmail(dot)com
