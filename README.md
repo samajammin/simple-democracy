@@ -1,6 +1,8 @@
 # Simple Democracy
 
-Truffle, Drizzle & React dApp for conducting basic elections.
+Truffle, Drizzle & React dApp for conducting basic elections on the Ethereum blockchain.
+
+You can interact with the smart contract using a local network (see instructions below) or on the Rinkeby testnet (see [deployed_addresses.txt](./deployed_addresses.txt)).
 
 ## Prerequisites
 

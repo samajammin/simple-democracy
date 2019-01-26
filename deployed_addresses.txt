@@ -1,0 +1,4 @@
+Network name:    'rinkeby'
+Network id:      4
+Contract address: 0x0EFAbF049C08F2ff59e1f2903223AdB2De5C3569
+Etherscan URL: https://rinkeby.etherscan.io/address/0x0EFAbF049C08F2ff59e1f2903223AdB2De5C3569
