@@ -70,6 +70,7 @@ contract SimpleDemocracy is Ownable {
 
     function addElectionCandidate(uint electionId, address candidate) public isAdmin() {
         require(elections[electionId].voteCounts[candidate] == 0, "Candidate has already been added.");
+        require(elections[electionId].candidates.length < 10, "Elections must have less than 10 candidates.");
         elections[electionId].voteCounts[candidate] = 1;
         elections[electionId].candidates.push(candidate);
         emit ElectionCandidateAdded(electionId, elections[electionId].name, candidate);
@@ -78,7 +79,6 @@ contract SimpleDemocracy is Ownable {
     function openElection(uint electionId) public isAdmin() revertIfFrozen() {
         require(elections[electionId].status == ElectionStatus.Pending, "Election is active or closed.");
         require(elections[electionId].candidates.length > 1, "Elections must have at least 2 candidates.");
-        require(elections[electionId].candidates.length < 10, "Elections must have less than 10 candidates."); 
         Election storage e = elections[electionId];
         e.status = ElectionStatus.Active;
         emit ElectionOpened(electionId, e.name, e.candidates);
