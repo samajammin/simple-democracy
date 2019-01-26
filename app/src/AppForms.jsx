@@ -95,8 +95,8 @@ class AppForms extends Component {
       return (
         <div>
           <h1>Welcome, stranger!</h1>
-          <h3>Looks like you're not registered in our system.</h3>
-          <h3>I'm afraid there's not much you can do here.</h3>
+          <h3>You're not registered in our system.</h3>
+          <h3>I'm afraid there's not much you can do here...</h3>
         </div>
       );
     }

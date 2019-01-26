@@ -7,6 +7,12 @@ import PropTypes from 'prop-types';
   https://github.com/trufflesuite/drizzle-react-components/blob/master/src/ContractData.js
  */
 
+const electionStatusMap = {
+  0: 'Pending',
+  1: 'Open',
+  2: 'Closed'
+};
+
 class ContractData extends Component {
   constructor(props, context) {
     super(props);
@@ -58,6 +64,17 @@ class ContractData extends Component {
     let displayData = this.props.contracts[this.props.contract][
       this.props.method
     ][this.state.dataKey].value;
+
+    if (this.props.method === 'getElectionStatus') {
+      displayData = electionStatusMap[displayData];
+    }
+
+    if (this.props.method === 'getElectionWinner') {
+      displayData =
+        displayData === '0x0000000000000000000000000000000000000000'
+          ? 'N/A'
+          : displayData;
+    }
 
     // Optionally convert to UTF8
     if (this.props.toUtf8) {

@@ -20,7 +20,6 @@ export default class AdminForms extends Component {
         />
         <h3>Create an election:</h3>
         <ContractForm contract="SimpleDemocracy" method="createElection" />
-        TODO: label for isAdmin boolean
         <h3>Add a candidate to an election:</h3>
         <ContractForm
           contract="SimpleDemocracy"
