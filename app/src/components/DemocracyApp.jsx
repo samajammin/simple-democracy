@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import AppForms from './AppForms';
 import AccountProfile from './AccountProfile';
 import ElectionStats from './ElectionStats';
-import drizzleOptions from './drizzleOptions';
+import drizzleOptions from '../drizzleOptions';
 
-import vote from './vote.jpg';
+import vote from '../vote.jpg';
 
 class DemocracyApp extends React.Component {
   constructor(props, context) {
@@ -46,8 +46,10 @@ class DemocracyApp extends React.Component {
       <div className="App">
         <div>
           <img src={vote} className="sd-logo" alt="simple-democracy-logo" />
-          <h1>SimpleDemocracy</h1>
-          <p>A dApp for conducting basic elections.</p>
+          <h1>Simple Democracy</h1>
+          <p>
+            A dApp for conducting basic elections. It's democracy. Simplified.
+          </p>
         </div>
         <div className="sd-container">
           <div className="section">
