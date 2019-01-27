@@ -143,14 +143,6 @@ truffle test
 
 ## Troubleshooting
 
-There's a known bug when switching between MetaMask accounts and attempting transactions. Inspect your browser console and you'll find this warning:
+In general, if you encounter an issue (e.g. when submitting an input), refreshing the browser should solve the problem.
 
-```
-inpage.js:1 MetaMask - RPC Error: Error: WalletMiddleware - Invalid "from" address.
-```
-
-There's an [open issue on MetaMask's Github](https://github.com/MetaMask/metamask-extension/issues/5587). Feel free to weigh in :)
-
-In general, if you encounter an issue (e.g. when submitting an input), try refreshing the browser. It should solve the problem.
-
-### Any other problems? Shoot me an email at sbrichards(at)gmail(dot)com
+If you're able to describe the steps that produced your issue and copy any errors from the console, please email me at sbrichards(at)gmail(dot)com and I'll look into it!
