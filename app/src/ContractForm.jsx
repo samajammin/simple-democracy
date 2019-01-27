@@ -2,13 +2,14 @@ import { drizzleConnect } from 'drizzle-react';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+// TODO handle transaction errors? i.e. rejected require statements
 class ContractForm extends Component {
   constructor(props, context) {
     super(props);
 
     this.contract = context.drizzle.contracts.SimpleDemocracy;
     this.inputs = [];
-    let initialState = {};
+    this.state = {};
 
     const abi = this.contract.abi;
     // Iterate over abi for correct function.
@@ -17,14 +18,12 @@ class ContractForm extends Component {
         this.inputs = abi[i].inputs;
 
         for (let j = 0; j < this.inputs.length; j++) {
-          initialState[this.inputs[j].name] = '';
+          this.state[this.inputs[j].name] = '';
         }
 
         break;
       }
     }
-
-    this.state = initialState;
   }
 
   handleSubmit = () => {
@@ -32,6 +31,18 @@ class ContractForm extends Component {
     method.cacheSend(...Object.values(this.state), {
       from: this.props.account
     });
+
+    // clear inputs after submission
+    const inputs = Object.keys(this.state);
+    const freshState = inputs.reduce((res, input) => {
+      // TODO better way to clear booleans...
+      if (typeof this.state[input] === 'boolean') {
+        return res;
+      }
+      res[input] = '';
+      return res;
+    }, {});
+    this.setState(freshState);
   };
 
   handleInputChange = event => {
