@@ -53,11 +53,19 @@ contract SimpleDemocracy is Ownable {
         frozen = !frozen;
     }
 
+    /** @notice Registers a Voter struct in the `voters` storage mapping
+      * @param voter address of the voter to register
+      * @param _isAdmin boolean for if the voter should be registered as an admin
+      */
     function registerVoter(address voter, bool _isAdmin) public isAdmin() revertIfFrozen() {
         require(getRegistration(voter) == false, "Voter already registered.");
         voters[voter] = Voter({ hasRegistered: true, isAdmin: _isAdmin});
     }
 
+    /** @notice Creates an Election struct in the `elections` storage mapping
+      * @param electionName name of the election to create
+      * @return electionID of the election created, used as the key of `elections` mapping
+      */
     function createElection(string memory electionName) public isAdmin() returns (uint) {
         require(bytes(electionName).length > 0, "Election must have a name");
         electionCount++;
@@ -68,6 +76,10 @@ contract SimpleDemocracy is Ownable {
         return electionCount;
     }
 
+    /** @notice Add a candidate to a pending Election
+      * @param electionId ID of the election to edit
+      * @param candidate address of the candidate to add
+      */
     function addElectionCandidate(uint electionId, address candidate) public isAdmin() {
         require(elections[electionId].voteCounts[candidate] == 0, "Candidate has already been added.");
         require(elections[electionId].candidates.length < 10, "Elections must have less than 10 candidates.");
@@ -76,6 +88,9 @@ contract SimpleDemocracy is Ownable {
         emit ElectionCandidateAdded(electionId, elections[electionId].name, candidate);
     }
 
+    /** @notice Open an Election to voting
+      * @param electionId ID of the election to open
+      */
     function openElection(uint electionId) public isAdmin() revertIfFrozen() {
         require(elections[electionId].status == ElectionStatus.Pending, "Election is active or closed.");
         require(elections[electionId].candidates.length > 1, "Elections must have at least 2 candidates.");
@@ -84,6 +99,9 @@ contract SimpleDemocracy is Ownable {
         emit ElectionOpened(electionId, e.name, e.candidates);
     }
 
+    /** @notice Close an Election to calculate a winning candidate and prevent further voting
+      * @param electionId ID of the election to open
+      */
     function closeElection(uint electionId) public isAdmin() revertIfFrozen() {
         require(elections[electionId].status == ElectionStatus.Active, "Election is not active.");
         Election storage e = elections[electionId]; // TODO assignment add cost? not necessary... purely for legibility
@@ -99,6 +117,10 @@ contract SimpleDemocracy is Ownable {
         emit ElectionClosed(electionId, e.name, e.candidates, e.winner);
     }
 
+    /** @notice Vote in an open Election
+      * @param electionId ID of the open election to vote in
+      * @param candidate address of the candidate to vote for
+      */
     function vote(uint electionId, address candidate) public isVoter() revertIfFrozen() {
         Election storage e = elections[electionId]; // TODO costly to assign storage before checks?
         require(e.status == ElectionStatus.Active, "Election is not active.");
@@ -110,31 +132,66 @@ contract SimpleDemocracy is Ownable {
     }
 
     // VIEWS
+
+    /** @notice Get the registration status of a voter
+      * @param _address address of the voter
+      * @return boolean representing if the voter hasRegistered
+      */
     function getRegistration(address _address) public view returns (bool) {
         return voters[_address].hasRegistered;
     }
 
+    /** @notice Get the admin status of a Voter
+      * @param _address address of the Voter
+      * @return boolean representing if the Voter isAdmin
+      */
     function getIsAdmin(address _address) public view returns (bool) {
         return voters[_address].isAdmin;
     }
 
+    /** @notice Get the name of an Election
+      * @param electionId ID of the Election
+      * @return name of the Election
+      */
     function getElectionName(uint electionId) public view returns (string memory) {
         return elections[electionId].name;
     }
     
+    /** @notice Get the candidates of an Election
+      * @param electionId ID of the Election
+      * @return address array of candidates
+      */
     function getElectionCandidates(uint electionId) public view returns (address[] memory) {
         return elections[electionId].candidates;
     }
 
+    /** @notice Get the status of an Election
+      * @param electionId ID of the Election
+      * @return status of the Election
+      */
     function getElectionStatus(uint electionId) public view returns (ElectionStatus) {
         return elections[electionId].status;
     }
 
+    /** @notice Get the winner of an Election
+      * @param electionId ID of the Election
+      * @return winner of the Election
+      */
     function getElectionWinner(uint electionId) public view returns (address) {
         return elections[electionId].winner;
     }
 
+    /** @notice Get the number of votes a candidate has received in an Election
+      * @param electionId ID of the Election
+      * @param electionId address of the candidate
+      * @return number of votes a candidate has received in the Election
+      */
     function getCandidateVoteCount(uint electionId, address candidate) public view returns (uint) {
         return elections[electionId].voteCounts[candidate];
+    }
+
+    // Fallback function
+    function() external {
+        revert("Function does not exist.");
     }
 }
