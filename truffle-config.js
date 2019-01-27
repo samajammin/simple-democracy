@@ -1,13 +1,19 @@
 const path = require('path');
-
 const HDWalletProvider = require('truffle-hdwallet-provider');
 const fs = require('fs');
 
-const infuraKey = 'MY_PROJECT_ID';
-const mnemonic = fs
-  .readFileSync('.secret')
-  .toString()
-  .trim();
+let infuraKey;
+let mnemonic;
+const cliArgs = process.argv;
+
+// only look for '.secret' if deploying to rinkeby
+if (cliArgs.includes('rinkeby')) {
+  infuraKey = 'MY_PROJECT_ID';
+  mnemonic = fs
+    .readFileSync('.secret')
+    .toString()
+    .trim();
+}
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>

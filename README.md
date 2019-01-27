@@ -2,7 +2,7 @@
 
 Truffle, Drizzle & React dApp for conducting basic elections on the Ethereum blockchain.
 
-You can interact with the smart contract using a local network (see instructions below) or on the Rinkeby testnet (see [deployed_addresses.txt](./deployed_addresses.txt)).
+You can interact with the smart contract using a local network (see instructions below) or on the Rinkeby testnet (see [deploying section](#deploying)).
 
 ## Prerequisites
 
@@ -133,6 +133,24 @@ Elections structs are state machines stored in contract storage - they maintain 
 
 ```
 truffle test
+```
+
+## Deploying
+
+If you'd like to interact with the contract on a testnet, see [deployed_addresses.txt](./deployed_addresses.txt).
+
+If you'd like to deploy the contract to a testnet, the [truffle-config.js](./truffle-config.js) is set up to deploy to Rinkeby. You'll have place your mnemonic seed phrase into a file named `.secret` in this project root:
+
+```
+echo 'your seed phrase in a string like this' >> .secret
+```
+
+Ensure your account address has adequate funds to deploy the contract, e.g. by using the [Rinkeby Faucet](https://faucet.rinkeby.io/).
+
+Then run:
+
+```
+truffle migrate --network rinkeby
 ```
 
 ## Resources
