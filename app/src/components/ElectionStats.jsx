@@ -1,16 +1,6 @@
 import React from 'react';
-import { drizzleConnect } from 'drizzle-react';
-import PropTypes from 'prop-types';
 import ContractData from './ContractData';
-class ElectionStats extends React.Component {
-  constructor(props, context) {
-    super(props);
-
-    const getElectionCount =
-      context.drizzle.contracts.SimpleDemocracy.methods.electionCount;
-    this.state = { dataKey: getElectionCount.cacheCall() };
-  }
-
+export default class ElectionStats extends React.Component {
   createElectionList = count => {
     let list = [];
 
@@ -58,35 +48,11 @@ class ElectionStats extends React.Component {
   };
 
   render() {
-    const contract = this.props.contracts.SimpleDemocracy;
-
-    if (!contract.initialized) {
-      return <span>Initializing...</span>;
-    }
-
-    if (!(this.state.dataKey in contract.electionCount)) {
-      return <span>Fetching...</span>;
-    }
-
-    let displayData = contract.electionCount[this.state.dataKey].value;
-
     return (
       <div>
-        <h3>Total elections created: {displayData}</h3>
-        {this.createElectionList(parseInt(displayData))}
+        <h3>Total elections created: {this.props.electionCount}</h3>
+        {this.createElectionList(parseInt(this.props.electionCount))}
       </div>
     );
   }
 }
-
-ElectionStats.contextTypes = {
-  drizzle: PropTypes.object
-};
-
-const mapStateToProps = state => {
-  return {
-    contracts: state.contracts
-  };
-};
-
-export default drizzleConnect(ElectionStats, mapStateToProps);
