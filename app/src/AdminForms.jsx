@@ -6,29 +6,36 @@ export default class AdminForms extends Component {
     return (
       <div>
         <h3>Register a voter:</h3>
-        {/* 
-          TODO try something like passing accounts here?
-          https://ethereum.stackexchange.com/questions/43707/truffle-drizzle-contractdata-call-keccak256-error
-
-          Or raise issue here?
-          https://github.com/trufflesuite/drizzle/issues/76
-        */}
         <ContractForm
-          contract="SimpleDemocracy"
+          className="contract-form"
           method="registerVoter"
           labels={['Address', 'isAdmin']}
+          account={this.props.account}
         />
         <h3>Create an election:</h3>
-        <ContractForm contract="SimpleDemocracy" method="createElection" />
+        <ContractForm
+          className="contract-form"
+          method="createElection"
+          account={this.props.account}
+        />
         <h3>Add a candidate to an election:</h3>
         <ContractForm
-          contract="SimpleDemocracy"
+          className="contract-form"
           method="addElectionCandidate"
+          account={this.props.account}
         />
         <h3>Open an election for voting:</h3>
-        <ContractForm contract="SimpleDemocracy" method="openElection" />
+        <ContractForm
+          className="contract-form"
+          method="openElection"
+          account={this.props.account}
+        />
         <h3>Close an election:</h3>
-        <ContractForm contract="SimpleDemocracy" method="closeElection" />
+        <ContractForm
+          className="contract-form"
+          method="closeElection"
+          account={this.props.account}
+        />
       </div>
     );
   }

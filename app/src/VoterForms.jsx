@@ -5,13 +5,14 @@ export default class VoterForms extends React.Component {
   render() {
     return (
       <div>
-        TODO - pass open eletion options as a dropdown to vote input
+        {/* TODO - pass open election options as a dropdown to vote input  */}
+        {/* TODO - pass candidate options as a dropdown to vote input */}
         <h3>Vote:</h3>
-        <ContractForm contract="SimpleDemocracy" method="vote" />
-        TODO - pass candidate options as a dropdown to vote input
-        <h3>getElectionWinner:</h3>
-        <ContractForm contract="SimpleDemocracy" method="getElectionWinner" />
-        TODO - this should be something we display vs call?
+        <ContractForm
+          className="contract-form"
+          method="vote"
+          account={this.props.account}
+        />
       </div>
     );
   }

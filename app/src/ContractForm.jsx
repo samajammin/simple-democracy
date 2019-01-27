@@ -2,25 +2,15 @@ import { drizzleConnect } from 'drizzle-react';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-/*
- * Create component.
- */
-
 class ContractForm extends Component {
   constructor(props, context) {
     super(props);
 
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-
-    this.contracts = context.drizzle.contracts;
-
-    // Get the contract ABI
-    const abi = this.contracts[this.props.contract].abi;
-
+    this.contract = context.drizzle.contracts.SimpleDemocracy;
     this.inputs = [];
     let initialState = {};
 
+    const abi = this.contract.abi;
     // Iterate over abi for correct function.
     for (let i = 0; i < abi.length; i++) {
       if (abi[i].name === this.props.method) {
@@ -37,25 +27,20 @@ class ContractForm extends Component {
     this.state = initialState;
   }
 
-  handleSubmit() {
-    if (this.props.sendArgs) {
-      return this.contracts[this.props.contract].methods[
-        this.props.method
-      ].cacheSend(...Object.values(this.state), this.props.sendArgs);
-    }
+  handleSubmit = () => {
+    const method = this.contract.methods[this.props.method];
+    method.cacheSend(...Object.values(this.state), {
+      from: this.props.account
+    });
+  };
 
-    this.contracts[this.props.contract].methods[this.props.method].cacheSend(
-      ...Object.values(this.state)
-    );
-  }
-
-  handleInputChange(event) {
+  handleInputChange = event => {
     const value =
       event.target.type === 'checkbox'
         ? event.target.checked
         : event.target.value;
     this.setState({ [event.target.name]: value });
-  }
+  };
 
   translateType(type) {
     switch (true) {
@@ -116,10 +101,6 @@ class ContractForm extends Component {
 ContractForm.contextTypes = {
   drizzle: PropTypes.object
 };
-
-/*
- * Export connected component.
- */
 
 const mapStateToProps = state => {
   return {

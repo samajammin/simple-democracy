@@ -80,7 +80,7 @@ class AppForms extends Component {
         <div>
           <h1>Welcome, admin!</h1>
           <h3>Here's a list of actions you can take:</h3>
-          <AdminForms />
+          <AdminForms account={this.props.account} />
         </div>
       );
     } else if (isRegistered) {
@@ -88,7 +88,7 @@ class AppForms extends Component {
         <div>
           <h1>Welcome, voter!</h1>
           <h3>Here's a list of actions you can take:</h3>
-          <VoterForms />
+          <VoterForms account={this.props.account} />
         </div>
       );
     } else {
@@ -106,10 +106,6 @@ class AppForms extends Component {
 AppForms.contextTypes = {
   drizzle: PropTypes.object
 };
-
-/*
- * Export connected component.
- */
 
 const mapStateToProps = state => {
   return {
