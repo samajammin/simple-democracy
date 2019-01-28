@@ -6,13 +6,32 @@
 .section {
   text-align: left;
   max-width: 720px;
-  margin: 2rem auto auto;
+  margin: 8px auto auto;
 }
 
 .sd-container {
   display: flex;
+  margin: 0 2rem;
 }
 
 .sd-logo {
   width: 120px;
+}
+
+.sd-form {
+  min-width: 400px;
+  display: flex;
+}
+
+.sd-text-input {
+  margin-right: 8px;
+}
+
+.sd-dropdown-container {
+  margin-right: 8px;
+}
+
+.sd-label {
+  margin-right: 8px;
+  font-size: 14px;
 }

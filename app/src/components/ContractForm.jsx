@@ -73,7 +73,7 @@ class ContractForm extends Component {
 
   render() {
     return (
-      <form className="pure-form pure-form-stacked">
+      <form className="sd-form">
         {this.inputs.map((input, index) => {
           let element;
           let inputType = this.translateType(input.type);
@@ -89,8 +89,8 @@ class ContractForm extends Component {
               electionOptions.push(i);
             }
             element = (
-              <div>
-                <label>Election ID:</label>
+              <div className="sd-dropdown-container">
+                <label className="sd-label">Election ID:</label>
                 <select onChange={this.handleInputChange} name="electionId">
                   {electionOptions.map(i => {
                     {
@@ -109,6 +109,7 @@ class ContractForm extends Component {
           } else {
             element = (
               <input
+                className="sd-text-input"
                 key={input.name}
                 type={inputType}
                 name={input.name}
@@ -122,7 +123,7 @@ class ContractForm extends Component {
           if (inputType === 'checkbox') {
             // return checkbox input wrapped in a label
             return (
-              <label key="checkbox">
+              <label className="sd-label" key="checkbox">
                 {inputLabel}:{element}
               </label>
             );
