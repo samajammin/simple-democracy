@@ -57,14 +57,15 @@ class DemocracyApp extends React.Component {
       return <span>Fetching...</span>;
     }
 
-    let electionCount = contract.electionCount[this.state.dataKey].value;
+    let electionCount = parseInt(
+      contract.electionCount[this.state.dataKey].value
+    );
 
     return (
       <div className="App">
         <div>
           <img src={vote} className="sd-logo" alt="simple-democracy-logo" />
           <h1>Simple Democracy</h1>
-          <p>electioncount: {electionCount}</p>
           <p>
             A dApp for conducting basic elections. It's democracy. Simplified.
           </p>

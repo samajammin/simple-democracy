@@ -23,18 +23,21 @@ export default class AdminForms extends Component {
           className="contract-form"
           method="addElectionCandidate"
           account={this.props.account}
+          electionCount={this.props.electionCount}
         />
         <h3>Open an election for voting:</h3>
         <ContractForm
           className="contract-form"
           method="openElection"
           account={this.props.account}
+          electionCount={this.props.electionCount}
         />
         <h3>Close an election:</h3>
         <ContractForm
           className="contract-form"
           method="closeElection"
           account={this.props.account}
+          electionCount={this.props.electionCount}
         />
       </div>
     );

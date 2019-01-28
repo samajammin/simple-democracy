@@ -80,7 +80,10 @@ class AppForms extends Component {
         <div>
           <h1>Welcome, admin!</h1>
           <h3>Here's a list of actions you can take:</h3>
-          <AdminForms account={this.props.account} />
+          <AdminForms
+            account={this.props.account}
+            electionCount={this.props.electionCount}
+          />
         </div>
       );
     } else if (isRegistered) {
@@ -88,7 +91,10 @@ class AppForms extends Component {
         <div>
           <h1>Welcome, voter!</h1>
           <h3>Here's a list of actions you can take:</h3>
-          <VoterForms account={this.props.account} />
+          <VoterForms
+            account={this.props.account}
+            electionCount={this.props.electionCount}
+          />
         </div>
       );
     } else {

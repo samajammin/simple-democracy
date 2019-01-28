@@ -35,7 +35,7 @@ class ContractForm extends Component {
     // clear inputs after submission
     const inputs = Object.keys(this.state);
     const freshState = inputs.reduce((res, input) => {
-      // TODO better way to clear booleans...
+      // TODO better way to clear booleans...?
       if (typeof this.state[input] === 'boolean') {
         return res;
       }
@@ -46,10 +46,15 @@ class ContractForm extends Component {
   };
 
   handleInputChange = event => {
-    const value =
+    let value =
       event.target.type === 'checkbox'
         ? event.target.checked
         : event.target.value;
+
+    // if integer, parseInt
+    if (/^\d+$/.test(value)) {
+      value = parseInt(value);
+    }
     this.setState({ [event.target.name]: value });
   };
 
@@ -70,21 +75,50 @@ class ContractForm extends Component {
     return (
       <form className="pure-form pure-form-stacked">
         {this.inputs.map((input, index) => {
+          let element;
           let inputType = this.translateType(input.type);
           let inputLabel = this.props.labels
             ? this.props.labels[index]
             : input.name;
           // check if input type is struct and if so loop out struct fields as well
-          const element = (
-            <input
-              key={input.name}
-              type={inputType}
-              name={input.name}
-              value={this.state[input.name]}
-              placeholder={inputLabel}
-              onChange={this.handleInputChange}
-            />
-          );
+
+          if (input.name === 'electionId') {
+            let electionOptions = [];
+
+            for (let i = 1; i <= this.props.electionCount; i++) {
+              electionOptions.push(i);
+            }
+            element = (
+              <div>
+                <label>Election ID:</label>
+                <select onChange={this.handleInputChange} name="electionId">
+                  {electionOptions.map(i => {
+                    {
+                      /* TODO key issue https://fb.me/react-warning-keys */
+                    }
+                    const optionKey = `election-id-${i}`;
+                    return (
+                      <option key={optionKey} value={i}>
+                        {i}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+            );
+          } else {
+            element = (
+              <input
+                key={input.name}
+                type={inputType}
+                name={input.name}
+                value={this.state[input.name]}
+                placeholder={inputLabel}
+                onChange={this.handleInputChange}
+              />
+            );
+          }
+
           if (inputType === 'checkbox') {
             // return checkbox input wrapped in a label
             return (

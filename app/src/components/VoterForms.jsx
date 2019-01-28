@@ -12,6 +12,7 @@ export default class VoterForms extends React.Component {
           className="contract-form"
           method="vote"
           account={this.props.account}
+          electionCount={this.props.electionCount}
         />
       </div>
     );
