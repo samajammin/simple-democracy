@@ -161,6 +161,6 @@ truffle migrate --network rinkeby
 
 ## Troubleshooting
 
-In general, if you encounter an issue (e.g. when submitting an input), refreshing the browser should solve it.
+In general, if you encounter an issue (e.g. when submitting an input), refreshing the browser should solve the problem.
 
 If you're able to describe the steps that produced your issue and copy any errors from the console, please email me at sbrichards(at)gmail(dot)com and I'll look into it!
